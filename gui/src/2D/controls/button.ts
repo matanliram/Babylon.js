@@ -37,10 +37,30 @@ export class Button extends Rectangle {
 
     private _textBlock: Nullable<TextBlock>;
     /**
-     * Returns the image part of the button (if any)
+     * Returns the text part of the button (if any)
      */
     public get textBlock(): Nullable<TextBlock> {
         return this._textBlock;
+    }
+
+    private _detectPointerOnOpaqueOnly: boolean;
+    /**
+     * Returns the text part of the button (if any)
+     */
+    public get detectPointerOnOpaqueOnly(): boolean {
+        return this._detectPointerOnOpaqueOnly;
+    }
+
+    public set detectPointerOnOpaqueOnly(value: boolean) {
+        if (this._image !== null) {
+            this._image.detectPointerOnOpaqueOnly = value;
+        }
+
+        if (this._detectPointerOnOpaqueOnly === value) {
+            return;
+        }
+
+        this._detectPointerOnOpaqueOnly = value;
     }
 
     /**
@@ -75,6 +95,29 @@ export class Button extends Rectangle {
             this.scaleX += 0.05;
             this.scaleY += 0.05;
         };
+
+        this._detectPointerOnOpaqueOnly = true;
+    }
+
+    /**
+     * Tests if a given coordinates belong to the current control
+     * @param x defines x coordinate to test
+     * @param y defines y coordinate to test
+     * @returns true if the coordinates are inside the control
+     */
+    public contains(x: number, y: number): boolean {
+        if (!super.contains(x, y)) {
+            console.log("z");
+            return false;
+        }
+
+        if (this._image === null || !this._detectPointerOnOpaqueOnly) {
+            console.log("y");
+            return true;
+        }
+
+        console.log("x");
+        return this._image.contains(x, y);
     }
 
     protected _getTypeName(): string {
@@ -103,6 +146,9 @@ export class Button extends Rectangle {
             return false;
         }
 
+        /* TODO: Add code that handles image data here */
+        // If not image, return false here
+
         if (this.pointerEnterAnimation) {
             this.pointerEnterAnimation();
         }
@@ -124,6 +170,9 @@ export class Button extends Rectangle {
         if (!super._onPointerDown(target, coordinates, pointerId, buttonIndex)) {
             return false;
         }
+
+        /* TODO: Add code that handles image data here */
+        // If not image, return false here
 
         if (this.pointerDownAnimation) {
             this.pointerDownAnimation();
@@ -168,6 +217,7 @@ export class Button extends Rectangle {
 
         // Store
         result._image = iconImage;
+        result._image.detectPointerOnOpaqueOnly = result._detectPointerOnOpaqueOnly;
         result._textBlock = textBlock;
 
         return result;
@@ -190,6 +240,7 @@ export class Button extends Rectangle {
 
         // Store
         result._image = iconImage;
+        result._image.detectPointerOnOpaqueOnly = result._detectPointerOnOpaqueOnly;
 
         return result;
     }
@@ -238,6 +289,7 @@ export class Button extends Rectangle {
 
         // Store
         result._image = iconImage;
+        result._image.detectPointerOnOpaqueOnly = result._detectPointerOnOpaqueOnly;
         result._textBlock = textBlock;
 
         return result;
