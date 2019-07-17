@@ -107,12 +107,11 @@ export class Button extends Rectangle {
      */
     public contains(x: number, y: number): boolean {
         if (!super.contains(x, y)) {
-            console.log("z");
+            console.log("y");
             return false;
         }
 
-        if (this._image === null || !this._detectPointerOnOpaqueOnly) {
-            console.log("y");
+        if (!this._image || !this._detectPointerOnOpaqueOnly) {
             return true;
         }
 
@@ -131,7 +130,7 @@ export class Button extends Rectangle {
             return false;
         }
 
-        if (!super.contains(x, y)) {
+        if (!this.contains(x, y)) {
             return false;
         }
 
@@ -145,9 +144,6 @@ export class Button extends Rectangle {
         if (!super._onPointerEnter(target)) {
             return false;
         }
-
-        /* TODO: Add code that handles image data here */
-        // If not image, return false here
 
         if (this.pointerEnterAnimation) {
             this.pointerEnterAnimation();
@@ -170,9 +166,6 @@ export class Button extends Rectangle {
         if (!super._onPointerDown(target, coordinates, pointerId, buttonIndex)) {
             return false;
         }
-
-        /* TODO: Add code that handles image data here */
-        // If not image, return false here
 
         if (this.pointerDownAnimation) {
             this.pointerDownAnimation();

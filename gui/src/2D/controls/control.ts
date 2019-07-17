@@ -88,7 +88,7 @@ export class Control {
     /** @hidden */
     public _linkedMesh: Nullable<AbstractMesh>;
     private _fontSet = false;
-    private _dummyVector2 = Vector2.Zero();
+    protected _lastCoordinates = Vector2.Zero();
     private _downCount = 0;
     private _enterCount = -1;
     private _doNotRender = false;
@@ -1784,9 +1784,9 @@ export class Control {
         if (!this._isEnabled) {
             return false;
         }
-        this._dummyVector2.copyFromFloats(x, y);
+        this._lastCoordinates.copyFromFloats(x, y);
         if (type === PointerEventTypes.POINTERMOVE) {
-            this._onPointerMove(this, this._dummyVector2, pointerId);
+            this._onPointerMove(this, this._lastCoordinates, pointerId);
 
             var previousControlOver = this._host._lastControlOver[pointerId];
             if (previousControlOver && previousControlOver !== this) {
@@ -1802,7 +1802,7 @@ export class Control {
         }
 
         if (type === PointerEventTypes.POINTERDOWN) {
-            this._onPointerDown(this, this._dummyVector2, pointerId, buttonIndex);
+            this._onPointerDown(this, this._lastCoordinates, pointerId, buttonIndex);
             this._host._registerLastControlDown(this, pointerId);
             this._host._lastPickedControl = this;
             return true;
@@ -1810,7 +1810,7 @@ export class Control {
 
         if (type === PointerEventTypes.POINTERUP) {
             if (this._host._lastControlDown[pointerId]) {
-                this._host._lastControlDown[pointerId]._onPointerUp(this, this._dummyVector2, pointerId, buttonIndex, true);
+                this._host._lastControlDown[pointerId]._onPointerUp(this, this._lastCoordinates, pointerId, buttonIndex, true);
             }
             delete this._host._lastControlDown[pointerId];
             return true;
