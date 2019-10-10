@@ -40,6 +40,7 @@ export class Image extends Control {
      * Observable notified when the content is loaded
      */
     public onImageLoadedObservable = new Observable<Image>();
+    private cachedImageData: Uint8ClampedArray;
 
     /**
      * Gets a boolean indicating that the content is loaded
@@ -442,12 +443,17 @@ export class Image extends Control {
         const context = canvas.getContext("2d")!;
         const width = this._currentMeasure.width | 0;
         const height = this._currentMeasure.height | 0;
-        const imageData = context.getImageData(0, 0, width, height).data;
+        if (this.cachedImageData === undefined) {
+            this.cachedImageData = context.getImageData(0, 0, width, height).data
+        }
+        else if (this.) {
+
+        }
 
         x = (x - this._currentMeasure.left) | 0;
         y = (y - this._currentMeasure.top) | 0;
 
-        const pickedPixel = imageData[(x + y * this._currentMeasure.width) * 4 + 3];
+        const pickedPixel = this.cachedImageData[(x + y * this._currentMeasure.width) * 4 + 3];
 
         return pickedPixel > 0;
     }
